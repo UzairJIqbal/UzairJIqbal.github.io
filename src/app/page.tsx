@@ -5,6 +5,7 @@ import { StatusBox } from "@/components/StatusBox";
 import { Button, ProjectCard, Section } from "@/components/ui";
 import { HeroCanvas } from "@/components/HeroCanvas";
 import { Tilt } from "@/components/Tilt";
+import { Marquee } from "@/components/Marquee";
 
 export default function Home() {
   return (
@@ -22,7 +23,7 @@ export default function Home() {
               <span className="ping h-2 w-2 rounded-full bg-accent" />
               {site.openTo}
             </p>
-            <h1 data-hero-item className="text-4xl font-bold tracking-tight sm:text-6xl">
+            <h1 data-hero-title className="text-5xl font-extrabold leading-[0.95] tracking-[-0.04em] sm:text-7xl">
               {site.name}
             </h1>
             <p data-hero-item className="mt-4 max-w-xl text-lg leading-relaxed sm:text-xl">
@@ -68,11 +69,17 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Kinetic type band, full width, pushed around by the scroll */}
+        <div aria-hidden className="relative left-1/2 -ml-[50vw] w-screen space-y-1 py-10 sm:py-14">
+          <Marquee items={[site.role, "AI that answers from real data", "Open to remote roles"]} />
+          <Marquee outline reverse items={skills.flatMap((s) => s.items).slice(0, 14)} />
+        </div>
+
         {/* 2. Best projects */}
         <Section id="projects" title="Projects">
-          <div data-stagger className="grid gap-4 sm:grid-cols-2">
-            {projects.map((p) => (
-              <ProjectCard key={p.name} p={p} />
+          <div className="grid gap-5 sm:grid-cols-2">
+            {projects.map((p, i) => (
+              <ProjectCard key={p.name} p={p} i={i} />
             ))}
           </div>
         </Section>
@@ -128,7 +135,9 @@ export default function Home() {
             </Tilt>
             <div className="space-y-2 leading-relaxed">
               {about.map((line) => (
-                <p key={line}>{line}</p>
+                <p key={line} data-split>
+                  {line}
+                </p>
               ))}
             </div>
           </div>
@@ -136,14 +145,17 @@ export default function Home() {
 
         {/* 7. Contact */}
         <Section id="contact" title="Contact">
-          <div data-reveal className="glow-card rounded-2xl bg-text p-6 text-bg sm:p-8">
-            <p className="text-2xl font-semibold">Hiring? Let's talk.</p>
+          <div data-zoom className="glow-card rounded-2xl bg-text p-6 text-bg sm:p-10">
+            <p data-split className="text-3xl font-extrabold tracking-tight sm:text-5xl">
+              Hiring? Let's talk.
+            </p>
             <p className="mt-2 opacity-80">
               I'm looking for remote full stack or AI engineer roles (junior or mid level). I'm based in Pakistan (PKT,
               UTC+5) and can start now.
             </p>
             <a
               href={`mailto:${site.email}`}
+              data-magnetic="0.2"
               className="mt-5 inline-block break-all font-mono text-lg underline decoration-accent decoration-2 underline-offset-4"
             >
               {site.email}

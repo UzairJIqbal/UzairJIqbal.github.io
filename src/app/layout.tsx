@@ -3,6 +3,9 @@ import { Inter, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { site } from "@/data/site";
 import { PageMotion } from "@/components/PageMotion";
+import { Preloader } from "@/components/Preloader";
+import { SmoothScroll } from "@/components/SmoothScroll";
+import { Cursor } from "@/components/Cursor";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
@@ -39,8 +42,10 @@ export const viewport: Viewport = {
 };
 
 // Runs before the page paints, so there is no white flash in dark mode.
-// "motion" hides the hero until its entrance animation starts (removed after 4s at the latest).
-const themeScript = `(function(){var d=document.documentElement;try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))d.classList.add('dark')}catch(e){}if(!matchMedia('(prefers-reduced-motion: reduce)').matches){d.classList.add('motion');setTimeout(function(){d.classList.remove('motion')},4000)}})()`;
+// "motion" hides the hero until its entrance animation starts. "loading" shows the intro loader
+// (first page of a visit) and "curtain" the short curtain lift (every page after). If scripts
+// fail, all three are removed after a few seconds so the page can never stay covered.
+const themeScript = `(function(){var d=document.documentElement;try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))d.classList.add('dark')}catch(e){}if(!matchMedia('(prefers-reduced-motion: reduce)').matches){var s=0;try{s=sessionStorage.getItem('intro-seen')}catch(e){}d.classList.add('motion',s?'curtain':'loading');setTimeout(function(){d.classList.remove('motion','loading','curtain')},s?4000:8000)}})()`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -49,8 +54,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="font-sans">
+        <Preloader />
         {children}
         <PageMotion />
+        <SmoothScroll />
+        <Cursor />
         {/* Vercel Analytics only works on Vercel; skip it on GitHub Pages. */}
         {process.env.VERCEL && <Analytics />}
       </body>

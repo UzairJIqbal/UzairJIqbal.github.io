@@ -43,9 +43,11 @@ export default function FlowlensPage() {
         <Link href="/#projects" className="text-sm text-muted hover:text-text">
           ← All projects
         </Link>
-        <div data-hero-item className="mt-6 flex flex-wrap items-center gap-3">
-          <h1 className="text-4xl font-bold tracking-tight">Flowlens</h1>
-          <span className="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent">Live · 2026</span>
+        <div className="mt-6 flex flex-wrap items-end gap-3">
+          <h1 data-hero-title className="text-5xl font-extrabold leading-[0.95] tracking-[-0.04em] sm:text-7xl">
+            Flowlens
+          </h1>
+          <span data-hero-item className="mb-2 rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent">Live · 2026</span>
         </div>
         <p data-hero-item className="mt-3 text-lg leading-relaxed text-muted">
           A map of how a codebase's files connect, with an AI chat that can only answer from that map.
