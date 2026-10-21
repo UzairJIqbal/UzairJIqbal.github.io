@@ -5,10 +5,51 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 
 // The 3D piece in the hero: a slowly turning graph of connected nodes, like the
-// file maps Flowlens draws. Small dots of light travel along the lines.
+// file maps Flowlens draws. Small dots of light travel along the lines, inside a drifting
+// cloud of shader particles. Scrolling down pushes the camera in and scatters the cloud.
 
 const NODE_COUNT = 46;
 const PULSE_COUNT = 9;
+const PARTICLE_COUNT = 1600;
+
+// How far the hero has been scrolled out of view, 0 to 1.
+const scrollProgress = () => Math.min(1, window.scrollY / (window.innerHeight * 0.9));
+
+const particleVertex = /* glsl */ `
+  uniform float uTime;
+  uniform float uScroll;
+  uniform float uSize;
+  attribute float aSeed;
+  varying float vAlpha;
+
+  void main() {
+    vec3 p = position;
+    // Each particle orbits the y axis at its own pace, closer ones faster.
+    float r = length(p.xz);
+    float a = uTime * (0.05 + 0.12 / max(r, 0.6)) * (0.6 + aSeed);
+    p.xz = mat2(cos(a), -sin(a), sin(a), cos(a)) * p.xz;
+    // Slow breathing wobble.
+    p += 0.09 * vec3(sin(uTime * 0.6 + aSeed * 40.0), cos(uTime * 0.5 + aSeed * 23.0), sin(uTime * 0.4 + aSeed * 17.0));
+    // Scatter outward as the page scrolls.
+    p *= 1.0 + uScroll * (0.5 + aSeed);
+
+    vec4 mv = modelViewMatrix * vec4(p, 1.0);
+    gl_Position = projectionMatrix * mv;
+    gl_PointSize = uSize * (0.45 + aSeed) / -mv.z;
+    vAlpha = smoothstep(8.0, 3.0, -mv.z) * (0.25 + 0.75 * aSeed) * (1.0 - uScroll * 0.6);
+  }
+`;
+
+const particleFragment = /* glsl */ `
+  uniform vec3 uColor;
+  varying float vAlpha;
+
+  void main() {
+    float d = length(gl_PointCoord - 0.5);
+    float glow = smoothstep(0.5, 0.0, d);
+    gl_FragColor = vec4(uColor, glow * glow * vAlpha);
+  }
+`;
 
 // Same "random" graph on every load, so the server and every visit look alike.
 function seeded(seed: number) {
@@ -64,6 +105,64 @@ function readColors(): Colors {
     muted: s.getPropertyValue("--muted").trim() || "#5d636e",
     bg: s.getPropertyValue("--bg").trim() || "#fbfaf8",
   };
+}
+
+function Particles({ color, still }: { color: string; still: boolean }) {
+  const { positions, seeds } = useMemo(() => {
+    const rand = seeded(29);
+    const positions = new Float32Array(PARTICLE_COUNT * 3);
+    const seeds = new Float32Array(PARTICLE_COUNT);
+    for (let i = 0; i < PARTICLE_COUNT; i++) {
+      // A thick shell around the graph, flattened a little into a disc like a galaxy.
+      const u = rand() * 2 - 1;
+      const theta = rand() * Math.PI * 2;
+      const ring = Math.sqrt(1 - u * u);
+      const r = 1.3 + Math.pow(rand(), 0.7) * 1.9;
+      positions[i * 3] = Math.cos(theta) * ring * r;
+      positions[i * 3 + 1] = u * r * 0.62;
+      positions[i * 3 + 2] = Math.sin(theta) * ring * r;
+      seeds[i] = rand();
+    }
+    return { positions, seeds };
+  }, []);
+
+  const uniforms = useMemo(
+    () => ({
+      uTime: { value: 0 },
+      uScroll: { value: 0 },
+      uSize: { value: 26 },
+      uColor: { value: new THREE.Color(color) },
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [],
+  );
+
+  useEffect(() => {
+    uniforms.uColor.value.set(color);
+  }, [color, uniforms]);
+
+  useFrame((state, delta) => {
+    uniforms.uSize.value = 26 * state.viewport.dpr;
+    if (still) return;
+    uniforms.uTime.value += delta;
+    uniforms.uScroll.value += (scrollProgress() - uniforms.uScroll.value) * Math.min(1, delta * 4);
+  });
+
+  return (
+    <points>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+        <bufferAttribute attach="attributes-aSeed" args={[seeds, 1]} />
+      </bufferGeometry>
+      <shaderMaterial
+        vertexShader={particleVertex}
+        fragmentShader={particleFragment}
+        uniforms={uniforms}
+        transparent
+        depthWrite={false}
+      />
+    </points>
+  );
 }
 
 function Network({ colors, still }: { colors: Colors; still: boolean }) {
@@ -129,8 +228,11 @@ function Network({ colors, still }: { colors: Colors; still: boolean }) {
     g.scale.setScalar(0.7 + 0.3 * (1 - Math.pow(1 - intro, 3)));
 
     if (!still) {
-      g.rotation.y += delta * 0.07;
-      const tx = pointer.current.y * 0.22;
+      // Scrolling spins the graph faster and dollies the camera in, like flying into it.
+      const scroll = scrollProgress();
+      g.rotation.y += delta * (0.07 + scroll * 0.5);
+      state.camera.position.z += (5.2 - scroll * 1.6 - state.camera.position.z) * Math.min(1, delta * 4);
+      const tx = pointer.current.y * 0.22 + scroll * 0.5;
       const tz = pointer.current.x * -0.12;
       g.rotation.x += (tx - g.rotation.x) * Math.min(1, delta * 2.5);
       g.rotation.z += (tz - g.rotation.z) * Math.min(1, delta * 2.5);
@@ -220,10 +322,7 @@ export default function HeroScene() {
   }, []);
 
   return (
-    <div
-      ref={wrap}
-      className={`h-full w-full transition-opacity duration-1000 ${ready ? "opacity-100" : "opacity-0"}`}
-    >
+    <div ref={wrap} className={`h-full w-full transition-opacity duration-1000 ${ready ? "opacity-100" : "opacity-0"}`}>
       {colors && (
         <Canvas
           camera={{ position: [0, 0, 5.2], fov: 45 }}
@@ -232,6 +331,7 @@ export default function HeroScene() {
           frameloop={!visible ? "never" : still ? "demand" : "always"}
           onCreated={() => setReady(true)}
         >
+          <Particles color={colors.accent} still={still} />
           <Network colors={colors} still={still} />
         </Canvas>
       )}
