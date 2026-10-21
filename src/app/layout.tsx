@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { site } from "@/data/site";
+import { PageMotion } from "@/components/PageMotion";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
@@ -38,7 +39,8 @@ export const viewport: Viewport = {
 };
 
 // Runs before the page paints, so there is no white flash in dark mode.
-const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}})()`;
+// "motion" hides the hero until its entrance animation starts (removed after 4s at the latest).
+const themeScript = `(function(){var d=document.documentElement;try{var t=localStorage.getItem('theme');if(t==='dark'||(!t&&matchMedia('(prefers-color-scheme: dark)').matches))d.classList.add('dark')}catch(e){}if(!matchMedia('(prefers-reduced-motion: reduce)').matches){d.classList.add('motion');setTimeout(function(){d.classList.remove('motion')},4000)}})()`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -48,6 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="font-sans">
         {children}
+        <PageMotion />
         <Analytics />
       </body>
     </html>
