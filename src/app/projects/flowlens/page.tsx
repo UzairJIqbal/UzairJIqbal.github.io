@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 function H({ n, children }: { n: number; children: React.ReactNode }) {
   return (
-    <h2 className="mb-3 mt-12 flex items-center gap-3 text-xl font-semibold">
+    <h2 data-reveal className="mb-3 mt-12 flex items-center gap-3 text-xl font-semibold">
       <span className="grid h-7 w-7 place-items-center rounded-full border border-accent font-mono text-xs text-accent">
         {n}
       </span>
@@ -43,14 +43,14 @@ export default function FlowlensPage() {
         <Link href="/#projects" className="text-sm text-muted hover:text-text">
           ← All projects
         </Link>
-        <div className="mt-6 flex flex-wrap items-center gap-3">
+        <div data-hero-item className="mt-6 flex flex-wrap items-center gap-3">
           <h1 className="text-4xl font-bold tracking-tight">Flowlens</h1>
           <span className="rounded-full bg-accent-soft px-2.5 py-0.5 text-xs font-medium text-accent">Live · 2026</span>
         </div>
-        <p className="mt-3 text-lg leading-relaxed text-muted">
+        <p data-hero-item className="mt-3 text-lg leading-relaxed text-muted">
           A map of how a codebase's files connect, with an AI chat that can only answer from that map.
         </p>
-        <div className="mt-6 flex flex-wrap gap-3">
+        <div data-hero-item className="mt-6 flex flex-wrap gap-3">
           <Button href="https://flowlens-rouge.vercel.app" primary external>
             ↗ Try it live
           </Button>
@@ -68,8 +68,8 @@ export default function FlowlensPage() {
         <H n={2}>My part</H>
         <p className="leading-relaxed">
           I built it alone, end to end: the parser, the map, the database and security, the AI features, the tests and
-          the deploy. I wrote a spec for each of 17 phases, built them with Claude Code, reviewed every pull request with
-          CodeRabbit, and checked each phase by hand before starting the next.
+          the deploy. I wrote a spec for each of 17 phases, built them with Claude Code, reviewed every pull request
+          with CodeRabbit, and checked each phase by hand before starting the next.
         </p>
 
         <H n={3}>What I built</H>
@@ -77,8 +77,13 @@ export default function FlowlensPage() {
           You paste a public GitHub repo. Flowlens downloads it, reads every import with the TypeScript compiler, and
           stores the result as a graph. Everything else reads from that one graph.
         </p>
-        <div className="rounded-2xl border border-line bg-bg p-4 sm:p-6" role="img" aria-label="Flowlens architecture diagram">
-          <div className="mx-auto max-w-md space-y-2">
+        <div
+          data-reveal
+          className="rounded-2xl border border-line bg-bg p-4 sm:p-6"
+          role="img"
+          aria-label="Flowlens architecture diagram"
+        >
+          <div data-stagger className="mx-auto max-w-md space-y-2">
             <Box title="Public GitHub repo" sub="pasted by the user" />
             <Arrow />
             <Box title="Parser" sub="ts-morph · aliases, re-exports, monorepos" />
@@ -86,7 +91,7 @@ export default function FlowlensPage() {
             <Box title="Graph in Postgres" sub="Supabase · row-level security per org" accent />
             <Arrow />
           </div>
-          <div className="mx-auto mt-2 grid max-w-2xl grid-cols-1 gap-2 sm:grid-cols-3">
+          <div data-stagger className="mx-auto mt-2 grid max-w-2xl grid-cols-1 gap-2 sm:grid-cols-3">
             <Box title="Map" sub="React Flow + dagre" />
             <Box title="Chat agent" sub="tool loop · lookups only" />
             <Box title="MCP server" sub="for coding agents" />
@@ -96,10 +101,16 @@ export default function FlowlensPage() {
           </p>
         </div>
         <ul className="mt-5 list-disc space-y-1.5 pl-5 leading-relaxed">
-          <li>A line between two files exists only when an import resolves to a real file. Imports that don't resolve are counted, with the reason.</li>
+          <li>
+            A line between two files exists only when an import resolves to a real file. Imports that don't resolve are
+            counted, with the reason.
+          </li>
           <li>It handles path aliases, index files, re-exports, dynamic imports, require() and monorepo packages.</li>
           <li>It can preview a pull request: which links it adds or removes, and what else could break.</li>
-          <li>Coding agents like Claude Code can read the map through an MCP server, using keys that are hashed and can be revoked.</li>
+          <li>
+            Coding agents like Claude Code can read the map through an MCP server, using keys that are hashed and can be
+            revoked.
+          </li>
         </ul>
 
         <H n={4}>The hard part</H>
@@ -112,14 +123,25 @@ export default function FlowlensPage() {
         </p>
 
         <H n={5}>Results</H>
-        <ul className="divide-y divide-line">
+        <ul data-stagger className="divide-y divide-line">
           {[
-            ["70 / 72", "test questions on the immer codebase answered fully right (mean F1 1.00), scored in LangSmith."],
-            ["0", "made-up file names in those answers. An automatic check looks for invented paths on every AI reply."],
-            ["17", "spec-driven phases, each with an acceptance check, shipped with GitHub Actions CI on Vercel's free tier."],
+            [
+              "70 / 72",
+              "test questions on the immer codebase answered fully right (mean F1 1.00), scored in LangSmith.",
+            ],
+            [
+              "0",
+              "made-up file names in those answers. An automatic check looks for invented paths on every AI reply.",
+            ],
+            [
+              "17",
+              "spec-driven phases, each with an acceptance check, shipped with GitHub Actions CI on Vercel's free tier.",
+            ],
           ].map(([n, t]) => (
             <li key={n} className="flex gap-5 py-3">
-              <span className="w-20 shrink-0 font-mono font-semibold text-accent">{n}</span>
+              <span data-count className="w-20 shrink-0 font-mono font-semibold tabular-nums text-accent">
+                {n}
+              </span>
               <span className="leading-relaxed">{t}</span>
             </li>
           ))}
@@ -131,7 +153,10 @@ export default function FlowlensPage() {
 
         <H n={6}>What I would do next</H>
         <ul className="list-disc space-y-1.5 pl-5 leading-relaxed">
-          <li>Make the chat use the blast-radius lookup for "what breaks if I change this?" instead of direct importers only.</li>
+          <li>
+            Make the chat use the blast-radius lookup for "what breaks if I change this?" instead of direct importers
+            only.
+          </li>
           <li>Test the parser itself against a hand-checked answer key, so the score covers more than the chat.</li>
           <li>Run the answer test on more repos, like bulletproof-react, and publish the numbers.</li>
         </ul>
