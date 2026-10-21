@@ -51,7 +51,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="font-sans">
         {children}
         <PageMotion />
-        <Analytics />
+        {/* Vercel Analytics only works on Vercel; skip it on GitHub Pages. */}
+        {process.env.VERCEL && <Analytics />}
       </body>
     </html>
   );

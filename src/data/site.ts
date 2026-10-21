@@ -4,7 +4,7 @@
 export const site = {
   name: "Uzair Javaid",
   role: "Full stack & AI engineer",
-  url: "https://uzairjavaid.vercel.app", // change to your own domain when you buy one
+  url: "https://uzairjiqbal.github.io", // change to your own domain when you buy one
   email: "uzair.j1089@gmail.com",
   github: "https://github.com/UzairJIqbal",
   githubUser: "UzairJIqbal",

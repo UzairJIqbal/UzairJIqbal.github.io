@@ -47,7 +47,7 @@ export function Footer() {
   return (
     <footer className="mx-auto max-w-3xl px-4 pb-10 pt-6 text-xs text-muted sm:px-6">
       <p>
-        © {new Date().getFullYear()} {site.name} · Built with Next.js and Tailwind, hosted on Vercel.
+        © {new Date().getFullYear()} {site.name} · Built with Next.js, Three.js and GSAP, hosted on GitHub Pages.
       </p>
     </footer>
   );
