@@ -48,6 +48,134 @@ body {
   background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
+  /* The 3D hero reaches past the column; never let it cause sideways scrolling. */
+  overflow-x: clip;
+}
+
+/* Hidden until the entrance animation takes over (see layout.tsx). */
+html.motion [data-hero-item] {
+  visibility: hidden;
+}
+
+/* Fade the 3D graph out where it sits behind the text. */
+.hero-canvas {
+  mask-image: radial-gradient(closest-side, #000 55%, transparent 100%);
+}
+@media (max-width: 639px) {
+  .hero-canvas {
+    opacity: 0.55;
+  }
+}
+
+/* Nav link for the section on screen. */
+.nav-link {
+  position: relative;
+  transition: color 0.2s;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.nav-link[data-active] {
+  color: var(--text);
+}
+.nav-link[data-active]::after {
+  transform: scaleX(1);
+}
+
+/* 3D tilt cards (Tilt.tsx). */
+.tilt {
+  position: relative;
+  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.tilt:hover {
+  transition-duration: 0.15s;
+}
+.tilt [data-depth] {
+  transform: translateZ(26px);
+}
+.tilt-glare {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+  background: radial-gradient(
+    circle at var(--mx, 50%) var(--my, 50%),
+    color-mix(in srgb, var(--accent) 16%, transparent),
+    transparent 60%
+  );
+}
+.tilt:hover .tilt-glare {
+  opacity: 1;
+}
+.tilt:hover > article {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  box-shadow: 0 24px 50px -28px color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+/* Slow drifting light inside the contact card. */
+.glow-card {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.glow-card::before,
+.glow-card::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: 70%;
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 38%, transparent), transparent);
+  animation: drift 16s ease-in-out infinite alternate;
+}
+.glow-card::before {
+  top: -45%;
+  right: -20%;
+}
+.glow-card::after {
+  bottom: -55%;
+  left: -25%;
+  animation-duration: 21s;
+  animation-direction: alternate-reverse;
+}
+@keyframes drift {
+  to {
+    transform: translate(-30%, 25%) scale(1.15);
+  }
+}
+
+/* The little "open to work" dot breathes. */
+.ping {
+  position: relative;
+}
+.ping::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  animation: ping 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+@keyframes ping {
+  75%,
+  100% {
+    transform: scale(2.6);
+    opacity: 0;
+  }
 }
 
 ::selection {
@@ -64,5 +192,10 @@ button:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  .glow-card::before,
+  .glow-card::after,
+  .ping::after {
+    animation: none;
   }
 }

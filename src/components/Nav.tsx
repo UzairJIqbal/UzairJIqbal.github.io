@@ -23,7 +23,7 @@ export function Nav() {
           <ul className="hidden items-center gap-4 text-sm text-muted md:flex">
             {links.map((l) => (
               <li key={l.href}>
-                <a href={l.href} className="hover:text-text">
+                <a href={l.href} className="nav-link hover:text-text">
                   {l.label}
                 </a>
               </li>
@@ -38,6 +38,7 @@ export function Nav() {
           <ThemeToggle />
         </div>
       </nav>
+      <span data-progress aria-hidden className="absolute inset-x-0 -bottom-px h-0.5 origin-left scale-x-0 bg-accent" />
     </header>
   );
 }
