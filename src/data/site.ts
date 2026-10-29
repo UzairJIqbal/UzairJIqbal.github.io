@@ -29,6 +29,7 @@ export type Project = {
   line: string; // what it does, who it's for, one number
   tools: string[]; // 3 or 4 only
   live?: string;
+  store?: string; // browser extension store listing
   code?: string;
   demo?: string; // 1-minute screen recording (YouTube/Loom). Empty = button hidden.
   page?: string; // full project page
@@ -46,6 +47,16 @@ export const projects: Project[] = [
     code: "https://github.com/UzairJIqbal/flowlens",
     demo: "",
     page: "/projects/flowlens",
+  },
+  {
+    name: "SoonerSlot",
+    status: "Live",
+    year: "2026",
+    line: "A browser extension that alerts you the minute an earlier Global Entry, NEXUS, SENTRI or FAST interview opens near you. Checks every center in your radius once a minute, with no servers, accounts or tracking. Unofficial; you book it yourself.",
+    tools: ["JavaScript", "Manifest V3", "Chrome APIs"],
+    store: "https://microsoftedge.microsoft.com/addons/detail/jjljahhpphkoeggpmihfokhcldhpblon",
+    code: "https://github.com/UzairJIqbal/soonerslot",
+    demo: "",
   },
   {
     name: "VerifAI",

@@ -94,6 +94,7 @@ export function ProjectCard({ p, i }: { p: Project; i: number }) {
             </ul>
             <div data-depth className="mt-auto flex flex-wrap gap-2">
               {p.live && <SmallLink href={p.live}>↗ Live</SmallLink>}
+              {p.store && <SmallLink href={p.store}>↗ Edge store</SmallLink>}
               {p.code && <SmallLink href={p.code}>⌘ Code</SmallLink>}
               {p.demo && <SmallLink href={p.demo}>▶ 60s demo</SmallLink>}
               {p.page && <SmallLink href={p.page}>Read how I built it →</SmallLink>}
