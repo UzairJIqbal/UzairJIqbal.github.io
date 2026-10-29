@@ -16,12 +16,8 @@ export const site = {
   topLine:
     "Full stack & AI engineer who builds AI apps that answer from real data, not guesses, for developers and small businesses.",
   // Proof line: [college] · [biggest number] · [award or result]
-  proof: [
-    "BS CS, COMSATS '27",
-    "4 apps live",
-    "AI chat agent: 70 of 72 test answers right, 0 made-up files",
-  ],
-  openTo: "Open to remote full stack and AI engineer roles. Can start now.",
+  proof: ["BS CS, COMSATS '27", "5 apps live", "AI chat agent: 70 of 72 test answers right, 0 made-up files"],
+  openTo: "Open to remote roles and fixed-price freelance work. Can start now.",
 };
 
 export type Status = "Live" | "In progress";
@@ -53,10 +49,11 @@ export const projects: Project[] = [
   },
   {
     name: "VerifAI",
-    status: "In progress",
+    status: "Live",
     year: "2026",
-    line: "A customer-support AI agent plus the test system that grades it: 50 test tasks, fake customers, an AI judge and a made-up-facts checker. Passes 90.7% of 140 tries.",
+    line: "A customer-support AI agent plus the test system that grades it: fake customers, an AI judge, a made-up-facts checker and a release gate. Final pass rate 89.7%.",
     tools: ["TypeScript", "AI SDK", "Groq", "SQLite"],
+    live: "https://verifai-phi-one.vercel.app",
     code: "https://github.com/UzairJIqbal/verifai",
     demo: "",
   },
@@ -84,11 +81,17 @@ export const projects: Project[] = [
 
 // Proof: wins with a number on each one.
 export const proofs: { number: string; text: string }[] = [
-  { number: "70 / 72", text: "Flowlens chat answers fully right on the immer codebase, with 0 made-up file names (scored in LangSmith)." },
-  { number: "90.7%", text: "VerifAI agent pass rate over 140 graded tries. A second full run scored 91.4%, so the number holds." },
+  {
+    number: "70 / 72",
+    text: "Flowlens chat answers fully right on the immer codebase, with 0 made-up file names (scored in LangSmith).",
+  },
+  {
+    number: "89.7%",
+    text: "VerifAI agent pass rate on the final baseline. Its release gate measures run-to-run noise (4.9 points) and caught a deliberately broken agent.",
+  },
   { number: "200+", text: "Vitest tests on NeuraMeet, shipped as 9 pull requests reviewed with CodeRabbit." },
   { number: "17", text: "Spec-driven phases to build Flowlens, each one checked by hand before the next." },
-  { number: "4", text: "Apps live on Vercel today: Flowlens, NeuraMeet, Kunji and JobPilot." },
+  { number: "5", text: "Apps live on Vercel today: Flowlens, VerifAI, NeuraMeet, Kunji and JobPilot." },
 ];
 
 // Skills in groups. Just the names, no bars.
@@ -112,6 +115,7 @@ export const about: string[] = [
 // The live apps the status box at the bottom checks.
 export const statusApps = [
   { name: "Flowlens", url: "https://flowlens-rouge.vercel.app" },
+  { name: "VerifAI", url: "https://verifai-phi-one.vercel.app" },
   { name: "NeuraMeet", url: "https://neurameet.vercel.app" },
   { name: "Kunji", url: "https://kunji-two.vercel.app" },
   { name: "JobPilot", url: "https://jobpilot-psi-nine.vercel.app" },

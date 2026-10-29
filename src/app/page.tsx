@@ -6,6 +6,7 @@ import { Button, ProjectCard, Section } from "@/components/ui";
 import { HeroCanvas } from "@/components/HeroCanvas";
 import { Tilt } from "@/components/Tilt";
 import { Marquee } from "@/components/Marquee";
+import { GithubChart } from "@/components/GithubChart";
 
 export default function Home() {
   return (
@@ -50,22 +51,7 @@ export default function Home() {
             </div>
 
             {/* GitHub activity right under the top, like Rinkit's site */}
-            <a
-              href={site.github}
-              target="_blank"
-              rel="noreferrer"
-              data-wipe
-              className="mt-10 block overflow-x-auto rounded-2xl border border-line bg-white p-4 transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_50px_-30px_var(--accent)]"
-            >
-              <p className="mb-2 font-mono text-xs text-neutral-500">GitHub activity, last 12 months</p>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={`https://ghchart.rshah.org/0f7a5c/${site.githubUser}`}
-                alt={`${site.githubUser} GitHub contribution chart`}
-                loading="lazy"
-                className="w-full min-w-[640px] sm:min-w-0"
-              />
-            </a>
+            <GithubChart />
           </div>
         </section>
 
@@ -147,11 +133,12 @@ export default function Home() {
         <Section id="contact" title="Contact">
           <div data-zoom className="glow-card rounded-2xl bg-text p-6 text-bg sm:p-10">
             <p data-split className="text-3xl font-extrabold tracking-tight sm:text-5xl">
-              Hiring? Let's talk.
+              Hiring, or need something built or fixed? Let's talk.
             </p>
             <p className="mt-2 opacity-80">
               I'm looking for remote full stack or AI engineer roles (junior or mid level). I'm based in Pakistan (PKT,
-              UTC+5) and can start now.
+              UTC+5) and can start now. I also take fixed-price freelance work: Chrome extensions, AI chatbots and
+              agents, MCP servers, and fixing or speeding up Next.js and Supabase apps.
             </p>
             <a
               href={`mailto:${site.email}`}
