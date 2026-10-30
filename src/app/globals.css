@@ -1,423 +1,130 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-/* Dark mode follows the "dark" class on <html> (set by the theme toggle). */
-@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:is(.dark *));
 
-/* One main colour (accent), everything else is neutral. */
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
+  --font-heading: var(--font-sans);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
 :root {
-  --bg: #fbfaf8;
-  --surface: #ffffff;
-  --text: #16181d;
-  --muted: #5d636e;
-  --line: #e6e3de;
-  --accent: #0f7a5c;
-  --accent-soft: #e3f3ed;
-  --accent-text: #ffffff;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
 }
 
 .dark {
-  --bg: #111317;
-  --surface: #181b21;
-  --text: #eceef1;
-  --muted: #9aa1ad;
-  --line: #2a2e36;
-  --accent: #3ccf9d;
-  --accent-soft: #15302a;
-  --accent-text: #08130f;
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
 }
 
-@theme inline {
-  --color-bg: var(--bg);
-  --color-surface: var(--surface);
-  --color-text: var(--text);
-  --color-muted: var(--muted);
-  --color-line: var(--line);
-  --color-accent: var(--accent);
-  --color-accent-soft: var(--accent-soft);
-  --color-accent-text: var(--accent-text);
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-mono-face), ui-monospace, monospace;
-}
-
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: 5rem;
-}
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  -webkit-font-smoothing: antialiased;
-  /* The 3D hero reaches past the column; never let it cause sideways scrolling. */
-  overflow-x: clip;
-}
-
-/* Hidden until the entrance animation takes over (see layout.tsx). */
-html.motion [data-hero-item],
-html.motion [data-hero-title] {
-  visibility: hidden;
-}
-
-/* Smooth scrolling (Lenis) takes over from the browser's own smooth scroll. */
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-.lenis.lenis-stopped {
-  overflow: clip;
-}
-
-/* ---------- Intro loader and page curtain (Preloader.tsx) ---------- */
-.preloader {
-  display: none;
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  pointer-events: none;
-}
-html.loading .preloader,
-html.curtain .preloader {
-  display: block;
-  pointer-events: auto;
-}
-html.loading {
-  overflow: hidden;
-}
-.preloader-panel {
-  position: absolute;
-  inset: 0;
-}
-.preloader-main {
-  --pl-bg: #0b0d10;
-  --pl-text: #eceef1;
-  --pl-accent: #3ccf9d;
-  background: var(--pl-bg);
-  color: var(--pl-text);
-}
-html.curtain .preloader-intro {
-  display: none;
-}
-.preloader-name {
-  perspective: 700px;
-}
-.preloader-char {
-  display: inline-block;
-  transform-origin: 50% 50% -0.5em;
-  backface-visibility: hidden;
-}
-.preloader-count {
-  font-size: clamp(5.5rem, 19vw, 15rem);
-  line-height: 0.8;
-  letter-spacing: -0.06em;
-}
-
-/* ---------- Custom cursor (Cursor.tsx) ---------- */
-.cursor {
-  display: none;
-}
-html.has-cursor .cursor {
-  display: block;
-}
-html.has-cursor,
-html.has-cursor a,
-html.has-cursor button {
-  cursor: none;
-}
-.cursor-dot,
-.cursor-ring {
-  position: fixed;
-  left: 0;
-  top: 0;
-  z-index: 90;
-  pointer-events: none;
-  border-radius: 9999px;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-html.cursor-on .cursor-dot,
-html.cursor-on .cursor-ring {
-  opacity: 1;
-}
-.cursor-dot {
-  width: 6px;
-  height: 6px;
-  margin: -3px 0 0 -3px;
-  background: var(--accent);
-}
-.cursor-ring {
-  width: 38px;
-  height: 38px;
-  margin: -19px 0 0 -19px;
-  display: grid;
-  place-items: center;
-  border: 1px solid color-mix(in srgb, var(--text) 45%, transparent);
-  transition:
-    opacity 0.3s,
-    width 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
-    height 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
-    margin 0.35s cubic-bezier(0.2, 0.8, 0.2, 1),
-    background-color 0.35s,
-    border-color 0.35s;
-}
-.cursor-ring[data-state="link"] {
-  width: 58px;
-  height: 58px;
-  margin: -29px 0 0 -29px;
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 12%, transparent);
-}
-.cursor-ring[data-state="label"] {
-  width: 84px;
-  height: 84px;
-  margin: -42px 0 0 -42px;
-  border-color: transparent;
-  background: var(--accent);
-}
-.cursor-label {
-  font: 600 11px/1 var(--font-mono);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent-text);
-  opacity: 0;
-  transform: scale(0.6);
-  transition:
-    opacity 0.25s,
-    transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.cursor-ring[data-state="label"] .cursor-label {
-  opacity: 1;
-  transform: none;
-}
-
-/* ---------- Kinetic marquee band (Marquee.tsx) ---------- */
-.marquee {
-  overflow: hidden;
-  white-space: nowrap;
-}
-.marquee-track {
-  display: inline-flex;
-  will-change: transform;
-}
-.marquee-text {
-  font-size: clamp(2.75rem, 9vw, 7.5rem);
-  line-height: 1;
-  font-weight: 800;
-  letter-spacing: -0.045em;
-  text-transform: uppercase;
-}
-.marquee-outline {
-  color: transparent;
-  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--text) 55%, transparent);
-}
-.marquee-star {
-  display: inline-block;
-  margin: 0 0.35em;
-  color: var(--accent);
-  -webkit-text-stroke: 0;
-  font-size: 0.5em;
-  vertical-align: middle;
-}
-
-/* ---------- Project card visual (ui.tsx) ---------- */
-.card-media {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-  background: color-mix(in srgb, var(--accent) 7%, var(--surface));
-}
-.card-media::before {
-  content: "";
-  position: absolute;
-  inset: -60%;
-  z-index: -2;
-  background: conic-gradient(
-    from var(--spin, 0deg),
-    transparent 0deg,
-    color-mix(in srgb, var(--accent) 55%, transparent) 70deg,
-    transparent 140deg,
-    color-mix(in srgb, var(--accent) 30%, transparent) 230deg,
-    transparent 300deg
-  );
-  filter: blur(28px);
-  animation: spin 14s linear infinite;
-  animation-delay: var(--delay, 0s);
-}
-.card-media::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background:
-    radial-gradient(circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--accent) 30%, transparent), transparent 45%),
-    radial-gradient(color-mix(in srgb, var(--text) 22%, transparent) 1px, transparent 1.4px) 0 0 / 14px 14px;
-  mask-image: linear-gradient(to bottom, #000, transparent 95%);
-}
-@keyframes spin {
-  to {
-    transform: rotate(1turn);
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
   }
-}
-.card-media-word {
-  font-size: clamp(2.3rem, 4.6vw, 3.3rem);
-  font-weight: 800;
-  white-space: nowrap;
-  letter-spacing: -0.05em;
-  line-height: 0.9;
-  color: transparent;
-  -webkit-text-stroke: 1.25px color-mix(in srgb, var(--text) 70%, transparent);
-  transition: color 0.5s, -webkit-text-stroke-color 0.5s;
-}
-.tilt:hover .card-media-word {
-  color: var(--text);
-  -webkit-text-stroke-color: transparent;
-}
-.tilt [data-depth="2"] {
-  transform: translateZ(60px);
-}
-
-/* Fade the 3D graph out where it sits behind the text. */
-.hero-canvas {
-  mask-image: radial-gradient(closest-side, #000 55%, transparent 100%);
-}
-@media (max-width: 639px) {
-  .hero-canvas {
-    opacity: 0.55;
+  body {
+    @apply bg-background text-foreground;
   }
-}
-
-/* Nav link for the section on screen. */
-.nav-link {
-  position: relative;
-  transition: color 0.2s;
-}
-.nav-link::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: -6px;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--accent);
-  transform: scaleX(0);
-  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.nav-link[data-active] {
-  color: var(--text);
-}
-.nav-link[data-active]::after {
-  transform: scaleX(1);
-}
-
-/* 3D tilt cards (Tilt.tsx). */
-.tilt {
-  position: relative;
-  transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
-  transform-style: preserve-3d;
-  transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-.tilt:hover {
-  transition-duration: 0.15s;
-}
-.tilt [data-depth] {
-  transform: translateZ(26px);
-}
-.tilt-glare {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.3s;
-  background: radial-gradient(
-    circle at var(--mx, 50%) var(--my, 50%),
-    color-mix(in srgb, var(--accent) 16%, transparent),
-    transparent 60%
-  );
-}
-.tilt:hover .tilt-glare {
-  opacity: 1;
-}
-.tilt:hover > article {
-  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
-  box-shadow: 0 24px 50px -28px color-mix(in srgb, var(--accent) 55%, transparent);
-}
-
-/* Slow drifting light inside the contact card. */
-.glow-card {
-  position: relative;
-  overflow: hidden;
-  isolation: isolate;
-}
-.glow-card::before,
-.glow-card::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  width: 70%;
-  aspect-ratio: 1;
-  border-radius: 9999px;
-  background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 38%, transparent), transparent);
-  animation: drift 16s ease-in-out infinite alternate;
-}
-.glow-card::before {
-  top: -45%;
-  right: -20%;
-}
-.glow-card::after {
-  bottom: -55%;
-  left: -25%;
-  animation-duration: 21s;
-  animation-direction: alternate-reverse;
-}
-@keyframes drift {
-  to {
-    transform: translate(-30%, 25%) scale(1.15);
-  }
-}
-
-/* The little "open to work" dot breathes. */
-.ping {
-  position: relative;
-}
-.ping::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: inherit;
-  animation: ping 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-@keyframes ping {
-  75%,
-  100% {
-    transform: scale(2.6);
-    opacity: 0;
-  }
-}
-
-::selection {
-  background: var(--accent-soft);
-}
-
-a:focus-visible,
-button:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 2px;
-  border-radius: 6px;
-}
-
-@media (prefers-reduced-motion: reduce) {
   html {
-    scroll-behavior: auto;
-  }
-  .glow-card::before,
-  .glow-card::after,
-  .ping::after,
-  .card-media::before {
-    animation: none;
+    @apply font-sans;
   }
 }

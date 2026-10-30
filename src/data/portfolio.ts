@@ -9,7 +9,7 @@ export const site = {
   github: "https://github.com/UzairJIqbal",
   githubUser: "UzairJIqbal",
   linkedin: "", // paste your LinkedIn URL here and the button shows up
-  resume: "/resume.pdf",
+  resume: "/portfolio/resume.pdf",
   location: "Pattoki, Punjab, Pakistan",
 
   // Top line, in the guide's format: [Name] — [role] who builds [what] for [whom].
@@ -33,12 +33,14 @@ export type Project = {
   code?: string;
   demo?: string; // 1-minute screen recording (YouTube/Loom). Empty = button hidden.
   page?: string; // full project page
+  image?: string; // screenshot of the live app, in public/portfolio/projects/
 };
 
 // Best project first, the one closest to the job second.
 export const projects: Project[] = [
   {
     name: "Flowlens",
+    image: "/portfolio/projects/flowlens.webp",
     status: "Live",
     year: "2026",
     line: "Turns any public TypeScript repo into a map of how its files connect, with an AI chat that answers only from that map. 70 of 72 test answers fully right, 0 made-up files.",
@@ -50,6 +52,7 @@ export const projects: Project[] = [
   },
   {
     name: "SoonerSlot",
+    image: "/portfolio/projects/soonerslot.webp",
     status: "Live",
     year: "2026",
     line: "A browser extension that alerts you the minute an earlier Global Entry, NEXUS, SENTRI or FAST interview opens near you. Checks every center in your radius once a minute, with no servers, accounts or tracking. Unofficial; you book it yourself.",
@@ -60,6 +63,7 @@ export const projects: Project[] = [
   },
   {
     name: "VerifAI",
+    image: "/portfolio/projects/verifai.webp",
     status: "Live",
     year: "2026",
     line: "A customer-support AI agent plus the test system that grades it: fake customers, an AI judge, a made-up-facts checker and a release gate. Final pass rate 89.7%.",
@@ -70,6 +74,7 @@ export const projects: Project[] = [
   },
   {
     name: "NeuraMeet",
+    image: "/portfolio/projects/neurameet.webp",
     status: "Live",
     year: "2026",
     line: "Video meetings with AI transcripts and meeting notes, plus safe guest access. Long meetings are split into chunks to fit free AI limits. 200+ tests.",
@@ -80,6 +85,7 @@ export const projects: Project[] = [
   },
   {
     name: "Kunji",
+    image: "/portfolio/projects/kunji.webp",
     status: "Live",
     year: "2026",
     line: "A store for buying digital subscriptions in Pakistani rupees. Logins are delivered into an encrypted vault that only one checked database function can write to.",
