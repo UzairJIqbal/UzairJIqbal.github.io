@@ -1884,3 +1884,366 @@ html:has(.f1) body.f1-active {
   background-color: var(--color-background);
   background-image: radial-gradient(ellipse 60% 50% at 50% 45%, rgb(251 146 60 / 0.1), transparent 70%), var(--grain);
 }
+
+/* ---------- Motion layer (skipped under reduced motion) ---------- */
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+/* Ink wash behind the hero, faded out at its edges into the panel. */
+.f1-ink {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1.6s ease;
+  -webkit-mask-image: radial-gradient(ellipse 70% 62% at 58% 52%, #000 35%, transparent 100%);
+  mask-image: radial-gradient(ellipse 70% 62% at 58% 52%, #000 35%, transparent 100%);
+}
+.f1-ink.is-on {
+  opacity: 1;
+}
+
+/* Portrait as a tilting disc: perspective on the holder, a sheen that
+   follows the pointer, and the glow drifting the other way for depth. */
+.f1-motion .f1-hero-media {
+  --mx: 50;
+  --my: 50;
+  perspective: 900px;
+}
+.f1-motion .f1-hero-portrait {
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+.f1-motion .f1-hero-portrait::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at calc(var(--mx) * 1%) calc(var(--my) * 1%), rgb(255 250 240 / 0.38), transparent 55%);
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+}
+.f1-motion .f1-hero-media::before {
+  translate: calc((50 - var(--mx)) * 0.6px) calc((50 - var(--my)) * 0.6px);
+}
+
+/* Reveals: copy rises, headings wipe up out of a mask, media unclips. */
+.f1-motion .f1-rv {
+  transition:
+    opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+    translate 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+    clip-path 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.f1-motion .f1-rv:not(.is-in) {
+  opacity: 0;
+  translate: 0 28px;
+}
+/* A mask, not clip-path: IntersectionObserver treats a fully clipped target
+   as off screen, so it would never reveal. */
+.f1-motion :is(.f1-display, .f1-tall-title, .f1-recirc-title).f1-rv {
+  -webkit-mask: linear-gradient(#000 50%, transparent 50%) 0 0 / 100% 200% no-repeat;
+  mask: linear-gradient(#000 50%, transparent 50%) 0 0 / 100% 200% no-repeat;
+  transition:
+    translate 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+    -webkit-mask-position 1.1s cubic-bezier(0.16, 1, 0.3, 1),
+    mask-position 1.1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.f1-motion :is(.f1-display, .f1-tall-title, .f1-recirc-title).f1-rv:not(.is-in) {
+  opacity: 1;
+  translate: 0 0.5em;
+  -webkit-mask-position: 0 100%;
+  mask-position: 0 100%;
+}
+.f1-motion :is(.f1-card-image, .f1-dcard-media).f1-rv {
+  clip-path: inset(0 round 0);
+}
+.f1-motion :is(.f1-card-image, .f1-dcard-media).f1-rv:not(.is-in) {
+  opacity: 1;
+  translate: none;
+  clip-path: inset(10% 6% round 6px);
+}
+.f1-motion :is(.f1-card-image, .f1-dcard-media).f1-rv img {
+  transition: scale 1.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.f1-motion :is(.f1-card-image, .f1-dcard-media).f1-rv:not(.is-in) img {
+  scale: 1.14;
+}
+.f1-motion .f1-inline-chart li.f1-rv .f1-bar {
+  transform-origin: left;
+  transition: scale 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s;
+}
+.f1-motion .f1-inline-chart li.f1-rv:not(.is-in) .f1-bar {
+  scale: 0 1;
+}
+.f1-motion .f1-inline-chart li.f1-rv:nth-child(2) { transition-delay: 0.06s; }
+.f1-motion .f1-inline-chart li.f1-rv:nth-child(3) { transition-delay: 0.12s; }
+.f1-motion .f1-inline-chart li.f1-rv:nth-child(4) { transition-delay: 0.18s; }
+.f1-motion .f1-inline-chart li.f1-rv:nth-child(5) { transition-delay: 0.24s; }
+
+/* Links: the underline draws in from the left on hover. */
+.f1-motion .f1-link {
+  text-decoration: none;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat,
+    linear-gradient(var(--color-accent), var(--color-accent)) 0 100% / 100% 1px no-repeat;
+  transition: color 0.25s ease, background-size 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.f1-motion .f1-link:hover,
+.f1-motion .f1-link:focus-visible {
+  background-size: 100% 1px, 100% 1px;
+}
+
+/* ---------- Reading progress, command menu, cursor ---------- */
+
+/* The share area doubles as the menu bar, so it shows on phones too. */
+.f1-toolbar {
+  justify-content: space-between;
+}
+.f1-share {
+  display: flex;
+}
+.f1-share > span:empty {
+  display: none;
+}
+
+/* Hairline under the toolbar that fills as the camera travels. */
+.f1-read {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 100%;
+  height: 2px;
+  background-color: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  pointer-events: none;
+}
+
+.f1-cmd-open {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 5px 6px 5px 10px;
+  border: 1px solid var(--color-line);
+  border-radius: 6px;
+  background: var(--color-background);
+  color: var(--color-text);
+  font: 500 12px/1 var(--font-mono);
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease;
+}
+.f1-cmd-open:hover,
+.f1-cmd-open:focus-visible {
+  border-color: var(--color-accent);
+  color: var(--color-fg);
+}
+.f1 kbd {
+  padding: 2px 5px;
+  border: 1px solid var(--color-line);
+  border-radius: 4px;
+  background: var(--color-background-alt);
+  color: var(--color-muted);
+  font: 500 11px/1.2 var(--font-mono);
+}
+@media (hover: none) {
+  .f1-cmd-open kbd {
+    display: none;
+  }
+  .f1-cmd-open {
+    padding-right: 10px;
+  }
+}
+
+.f1-cmd {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: min(16vh, 140px) 16px 16px;
+  background: rgb(28 27 25 / 0.28);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  animation: f1-cmd-fade 0.18s ease-out;
+}
+.f1-cmd-box {
+  width: min(560px, 100%);
+  max-height: min(520px, 70svh);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  background-color: var(--color-background);
+  background-image: var(--grain);
+  box-shadow: 0 30px 80px -20px rgb(60 30 10 / 0.35), 0 2px 6px rgb(0 0 0 / 0.06);
+  animation: f1-cmd-pop 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.f1-cmd-field {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--color-line);
+  font-family: var(--font-mono);
+}
+.f1-cmd-field b {
+  color: var(--color-accent);
+}
+.f1-cmd-field input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: none;
+  color: var(--color-fg);
+  font: 400 15px/1.4 var(--font-mono);
+}
+.f1-cmd-field input::placeholder {
+  color: var(--color-muted);
+}
+.f1-cmd ul {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 6px;
+}
+.f1-cmd-group {
+  padding: 10px 10px 4px;
+  color: var(--color-muted);
+  font: 500 11px/1 var(--font-mono);
+  text-transform: lowercase;
+}
+.f1-cmd-group::before {
+  content: "// ";
+}
+.f1-cmd-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 9px 10px;
+  border-radius: 7px;
+  color: var(--color-text);
+  font-size: 14px;
+  cursor: pointer;
+}
+.f1-cmd-item small {
+  overflow: hidden;
+  color: var(--color-muted);
+  font: 12px/1 var(--font-mono);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.f1-cmd-item[aria-selected="true"] {
+  background-color: var(--color-band);
+  color: var(--color-fg);
+  box-shadow: inset 2px 0 0 var(--color-accent);
+}
+.f1-cmd-empty {
+  padding: 18px 10px;
+  color: var(--color-muted);
+  font: 13px var(--font-mono);
+}
+.f1-cmd-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 3000;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--color-fg);
+  color: var(--color-canvas);
+  font: 500 12px/1 var(--font-mono);
+  opacity: 0;
+  translate: -50% 12px;
+  pointer-events: none;
+  transition: opacity 0.25s ease, translate 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.f1-cmd-toast[data-on] {
+  opacity: 1;
+  translate: -50% 0;
+}
+@keyframes f1-cmd-fade {
+  from { opacity: 0; }
+}
+@keyframes f1-cmd-pop {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .f1-cmd,
+  .f1-cmd-box {
+    animation: none;
+  }
+}
+
+/* Custom cursor (fine pointers, motion allowed). The native cursor stays
+   for text fields so the caret position is still obvious. */
+.f1-has-cursor,
+.f1-has-cursor * {
+  cursor: none !important;
+}
+.f1-has-cursor input {
+  cursor: text !important;
+}
+.f1-cursor-dot,
+.f1-cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 4000;
+  pointer-events: none;
+  border-radius: 50%;
+}
+.f1-cursor-dot {
+  width: 6px;
+  height: 6px;
+  background: #c2410c;
+}
+.f1-cursor-ring {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgb(194 65 12 / 0.45);
+  transition: width 0.35s cubic-bezier(0.16, 1, 0.3, 1), height 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.3s ease, border-color 0.3s ease, opacity 0.3s ease, scale 0.2s ease;
+}
+.f1-cursor-ring span {
+  color: #fff;
+  font: 500 11px/1 var(--dev-mono), monospace;
+  letter-spacing: 0.04em;
+}
+.f1-cursor-ring[data-state="link"] {
+  width: 52px;
+  height: 52px;
+  border-color: transparent;
+  background-color: rgb(194 65 12 / 0.12);
+}
+.f1-cursor-ring[data-state="view"] {
+  width: 72px;
+  height: 72px;
+  border-color: transparent;
+  background-color: rgb(28 27 25 / 0.82);
+}
+.f1-cursor-ring.is-down {
+  scale: 0.85;
+}
+.f1-cursor-ring.is-out,
+.f1-cursor-ring.is-out + .f1-cursor-dot {
+  opacity: 0;
+}
+
+/* Split lines: the mask wrapper SplitText adds clips each line. */
+.f1-motion .f1-line {
+  will-change: transform;
+}

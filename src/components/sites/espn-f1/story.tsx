@@ -5,6 +5,9 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import { about, projects, proofs, site, skills } from "@/data/portfolio";
+import { Ink } from "./ink";
+import { scrollToY, smoothScrollActive, startCursor, startDrag, startHero, startReveals, startSmoothScroll } from "./motion";
+import { Palette } from "./palette";
 import "./f1.css";
 
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
@@ -236,7 +239,9 @@ function Wordmark() {
   );
 }
 
-function Toolbar() {
+type Jump = (selector: string | null, index?: number) => void;
+
+function Toolbar({ jump, progressRef }: { jump: Jump; progressRef: React.RefObject<HTMLDivElement | null> }) {
   const [copied, setCopied] = useState(false);
   const share = async () => {
     const url = window.location.href;
@@ -259,12 +264,13 @@ function Toolbar() {
         className="f1-wordmark"
         onClick={(e) => {
           e.preventDefault();
-          window.scrollTo({ top: 0 });
+          scrollToY(0, false);
         }}
       >
         <Wordmark />
       </a>
       <div className="f1-share">
+        <Palette jump={jump} />
         <span aria-live="polite">{copied ? "Link copied" : ""}</span>
         <button type="button" onClick={share} aria-label="Share this page">
           <svg viewBox="0 0 21 25" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
@@ -272,6 +278,7 @@ function Toolbar() {
           </svg>
         </button>
       </div>
+      <div className="f1-read" ref={progressRef} aria-hidden="true" />
     </header>
   );
 }
@@ -316,6 +323,10 @@ export function Story() {
   const hor1ProgressRef = useRef<HTMLDivElement>(null);
   const finishRef = useRef<HTMLDivElement>(null);
   const hor2Ref = useRef<HTMLElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+  const readRef = useRef<HTMLDivElement>(null);
+  const jumpRef = useRef<Jump>(() => scrollToY(0, false));
+  const jump = useCallback<Jump>((selector, index) => jumpRef.current(selector, index), []);
   const cardRefs = useRef<HTMLDivElement[]>([]);
 
   const finishLoading = useCallback(() => setIntroDone(true), []);
@@ -333,6 +344,24 @@ export function Story() {
       document.body.style.height = "";
     };
   }, [loaded]);
+
+  // Smooth scroll, the hero entrance and the on-screen reveals; all skipped
+  // under reduced motion, where the page shows everything at rest.
+  useIsoLayoutEffect(() => {
+    if (!loaded || reduced) return;
+    const smooth = startSmoothScroll();
+    const stopHero = startHero(heroRef.current!);
+    const stopReveals = startReveals(worldRef.current!);
+    const stopCursor = startCursor();
+    const stopDrag = startDrag(worldRef.current!);
+    return () => {
+      stopDrag();
+      stopCursor();
+      stopHero();
+      stopReveals();
+      smooth?.stop();
+    };
+  }, [loaded, reduced]);
 
   // Camera: a focus point rides the path as the page scrolls; the world is
   // translated so the point stays centred, clamped to the world's edges.
@@ -373,7 +402,8 @@ export function Story() {
           trigger: document.body,
           start: "top top",
           end: "bottom bottom",
-          scrub: reduced ? true : 0.5,
+          // Lenis already eases wheel input; touch and keyboard get GSAP's lag.
+          scrub: reduced || smoothScrollActive() ? true : 0.5,
         },
         motionPath: { path, align: path, alignOrigin: [0.5, 0.5] },
         ease: "none",
@@ -384,6 +414,7 @@ export function Story() {
           const top = Math.round(clampY(y - window.innerHeight / 2));
           world.style.transformOrigin = `${Math.round(x)}px ${Math.round(y)}px`;
           world.style.transform = `translate3d(${-left}px, ${-top}px, 1px)`;
+          readRef.current?.style.setProperty("transform", `scaleX(${tween?.progress() ?? 0})`);
 
           // Timeline nav stays pinned at the top while the projects pan by.
           const a = window.innerWidth;
@@ -416,10 +447,7 @@ export function Story() {
 
     // Keyboard: move the camera to whatever receives focus.
     const viewport = viewportRef.current!;
-    const onFocus = (e: FocusEvent) => {
-      const el = e.target as HTMLElement;
-      viewport.scrollTop = viewport.scrollLeft = world.scrollTop = world.scrollLeft = 0;
-      if (!world.contains(el)) return;
+    const progressAt = (el: HTMLElement) => {
       const target = worldPos(el, world);
       const total = path.getTotalLength();
       let best = 0;
@@ -432,7 +460,17 @@ export function Story() {
           best = i / 600;
         }
       }
-      window.scrollTo({ top: best * ScrollTrigger.maxScroll(window), behavior: reduced ? "auto" : "smooth" });
+      return best;
+    };
+    const onFocus = (e: FocusEvent) => {
+      const el = e.target as HTMLElement;
+      viewport.scrollTop = viewport.scrollLeft = world.scrollTop = world.scrollLeft = 0;
+      if (!world.contains(el)) return;
+      scrollToY(progressAt(el) * ScrollTrigger.maxScroll(window), !reduced);
+    };
+    jumpRef.current = (selector, index = 0) => {
+      const el = selector ? world.querySelectorAll<HTMLElement>(selector)[index] : null;
+      scrollToY(el ? progressAt(el) * ScrollTrigger.maxScroll(window) : 0, !reduced);
     };
     document.addEventListener("focusin", onFocus);
 
@@ -463,9 +501,9 @@ export function Story() {
   ].filter((l) => l.href);
 
   return (
-    <main className="f1" id="top">
+    <main className={reduced ? "f1" : "f1 f1-motion"} id="top">
       {!loaded && !reduced && <Loader onDone={finishLoading} />}
-      <Toolbar />
+      <Toolbar jump={jump} progressRef={readRef} />
       <div className="f1-viewport-container">
         <div className="f1-viewport" ref={viewportRef}>
           <div className="f1-world" ref={worldRef}>
@@ -474,7 +512,8 @@ export function Story() {
               {/* Hero + intro */}
               <div className="f1-outer f1-intro">
                 <div className="f1-inner">
-                  <div className="f1-hero">
+                  <div className="f1-hero" ref={heroRef}>
+                    {loaded && !reduced && <Ink />}
                     <div className="f1-hero-media">
                       <div className="f1-hero-portrait">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
