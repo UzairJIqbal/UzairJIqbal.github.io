@@ -701,6 +701,10 @@ html:has(.f1) body.f1-active {
   line-height: 16px;
 }
 .f1-scroll-hint {
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
   color: var(--color-muted);
   font-family: var(--font-mono);
   font-size: 12px;
@@ -2246,4 +2250,108 @@ html.lenis body {
 /* Split lines: the mask wrapper SplitText adds clips each line. */
 .f1-motion .f1-line {
   will-change: transform;
+}
+
+/* ----- Plain view -----
+   The portfolio as a plain page. On the home page it covers the story only
+   when the story can't start: scripts are off (noscript), it threw
+   (html.f1-fail), or it still isn't ready after a few seconds. */
+.f1-simple {
+  min-height: 100vh;
+  background: #f5f4f0;
+  color: #48453f;
+  font-family: var(--dev-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+}
+.f1-simple-inner {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 56px 16px 80px;
+}
+.f1-simple h1,
+.f1-simple h2,
+.f1-simple h3 {
+  color: #1c1b19;
+  font-family: var(--dev-serif), Georgia, serif;
+  line-height: 1.15;
+}
+.f1-simple h1 {
+  margin: 8px 0 16px;
+  font-size: clamp(40px, 9vw, 64px);
+}
+.f1-simple h2 {
+  margin: 48px 0 12px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e0da;
+  font-size: 28px;
+}
+.f1-simple h3 {
+  margin: 28px 0 6px;
+  font-size: 21px;
+}
+.f1-simple h3 small {
+  color: #6f6b63;
+  font-family: var(--dev-mono), ui-monospace, Menlo, monospace;
+  font-size: 12px;
+  font-weight: 400;
+}
+.f1-simple p {
+  margin: 0 0 10px;
+}
+.f1-simple-lead {
+  color: #1c1b19;
+  font-size: 20px;
+}
+.f1-simple-label {
+  color: #6f6b63;
+  font-family: var(--dev-mono), ui-monospace, Menlo, monospace;
+  font-size: 13px;
+}
+.f1-simple-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+}
+.f1-simple a {
+  color: #c2410c;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.f1-simple-proofs {
+  margin: 0;
+  padding-left: 20px;
+}
+.f1-simple-proofs li {
+  margin-bottom: 8px;
+}
+.f1-simple-proofs b {
+  color: #1c1b19;
+}
+
+.f1-simple-overlay {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 5000;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  visibility: hidden;
+  animation: f1-failsafe 0s 9s forwards;
+}
+@keyframes f1-failsafe {
+  to {
+    visibility: visible;
+  }
+}
+html.f1-ready .f1-simple-overlay {
+  display: none;
+}
+html.f1-fail .f1-simple-overlay {
+  display: block;
+  visibility: visible;
+  animation: none;
 }

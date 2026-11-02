@@ -349,17 +349,24 @@ export function Story() {
   // under reduced motion, where the page shows everything at rest.
   useIsoLayoutEffect(() => {
     if (!loaded || reduced) return;
-    const smooth = startSmoothScroll();
-    const stopHero = startHero(heroRef.current!);
-    const stopReveals = startReveals(worldRef.current!);
-    const stopCursor = startCursor();
-    const stopDrag = startDrag(worldRef.current!);
+    // Each effect is optional: if one fails in some browser, the page still
+    // scrolls without it.
+    const stops: (() => void)[] = [];
+    const run = (start: () => (() => void) | undefined) => {
+      try {
+        const stop = start();
+        if (stop) stops.push(stop);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    run(() => startSmoothScroll()?.stop);
+    run(() => startHero(heroRef.current!));
+    run(() => startReveals(worldRef.current!));
+    run(startCursor);
+    run(() => startDrag(worldRef.current!));
     return () => {
-      stopDrag();
-      stopCursor();
-      stopHero();
-      stopReveals();
-      smooth?.stop();
+      for (const stop of stops.reverse()) stop();
     };
   }, [loaded, reduced]);
 
@@ -439,7 +446,18 @@ export function Story() {
       timer = window.setTimeout(() => build(tween?.scrollTrigger?.progress ?? 0), 120);
     };
 
-    const first = window.setTimeout(() => build(0), 20);
+    // If the camera can't be built, fall back to the plain view rather than
+    // leaving a hero that won't scroll.
+    const html = document.documentElement;
+    const first = window.setTimeout(() => {
+      try {
+        build(0);
+        html.classList.add("f1-ready");
+      } catch (err) {
+        console.error(err);
+        html.classList.add("f1-fail");
+      }
+    }, 20);
     const ro = new ResizeObserver(rebuild);
     ro.observe(world);
     window.addEventListener("resize", rebuild);
@@ -525,7 +543,9 @@ export function Story() {
                       <h1 className="f1-h1 f1-display">{site.name}</h1>
                       <div className="f1-hero-accents">
                         <span className="f1-hero-fig">{fig(1)}</span>
-                        <p className="f1-scroll-hint">Scroll to continue</p>
+                        <button type="button" className="f1-scroll-hint" onClick={() => jump(".f1-intro-copy")}>
+                          Scroll to continue
+                        </button>
                       </div>
                     </div>
                   </div>
