@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Fraunces, Geist, Geist_Mono } from "next/font/google";
-import { site } from "@/data/portfolio";
+import { projects, site } from "@/data/portfolio";
 import "./globals.css";
 
 // Editorial developer pairing: Fraunces for display headings, Geist for
@@ -23,6 +23,38 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", images: ["/portfolio/og.png"] },
 };
 
+// Structured data for search engines and AI tools: who Uzair is, the site,
+// and one short entry per project. Every value comes from portfolio.ts.
+const person = `${site.url}/#person`;
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": person,
+      name: site.name,
+      jobTitle: site.role,
+      description: site.topLine,
+      url: site.url,
+      sameAs: [site.github],
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${site.url}/#website`,
+      name: site.name,
+      url: site.url,
+      author: { "@id": person },
+    },
+    ...projects.map((p) => ({
+      "@type": "CreativeWork",
+      name: p.name,
+      url: `${site.url}/projects/${p.slug}/`,
+      description: p.line,
+      creator: { "@id": person },
+    })),
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -30,7 +62,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${sans.variable} ${mono.variable} ${serif.variable} antialiased`}>
-      <body>{children}</body>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

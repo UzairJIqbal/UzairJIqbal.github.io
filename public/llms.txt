@@ -1,0 +1,17 @@
+# Uzair Javaid
+
+> Full stack & AI engineer who builds AI apps that answer from real data, not guesses, for developers and small businesses.
+
+## Projects
+
+- [VerifAI](https://uzairjiqbal.github.io/projects/verifai/): A customer-support AI agent plus the test system that grades it: fake customers, an AI judge, a made-up-facts checker and a release gate. Final pass rate 89.7%.
+- [Flowlens](https://uzairjiqbal.github.io/projects/flowlens/): Turns any public TypeScript repo into a map of how its files connect, with an AI chat that answers only from that map. 70 of 72 test answers fully right, 0 made-up files.
+- [Kunji](https://uzairjiqbal.github.io/projects/kunji/): A store for buying digital subscriptions in Pakistani rupees. Logins are delivered into an encrypted vault that only one checked database function can write to.
+- [NeuraMeet](https://uzairjiqbal.github.io/projects/neurameet/): Video meetings with AI transcripts and meeting notes, plus safe guest access. 200+ tests.
+- [SoonerSlot](https://uzairjiqbal.github.io/projects/soonerslot/): Browser extension that alerts you when an earlier Global Entry, NEXUS, SENTRI or FAST interview opens near you. Manifest V3, no servers, accounts or tracking.
+- [YouTube Study Bookmarks](https://microsoftedge.microsoft.com/addons/detail/youtube-study-bookmarks/ciobpmgaabihaoabjjiifhigfbnggmob): Browser extension live on Microsoft Edge Add-ons. React 19, strict TypeScript, Manifest V3, Playwright tests.
+
+## Contact
+
+- GitHub: https://github.com/UzairJIqbal
+- Portfolio: https://uzairjiqbal.github.io

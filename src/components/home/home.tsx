@@ -20,11 +20,14 @@ export function Home() {
         <section className="hm-hero" aria-labelledby="hero-title">
           <div className="hm-hero-inner">
             <div className="hm-hero-copy">
-              <p className="hm-role" {...enter(0)}>
-                {site.role}
-              </p>
-              <h1 id="hero-title" className="hm-name">
-                <Words text={site.name} />
+              {/* One H1 carries name and role, so crawlers read both together. */}
+              <h1 id="hero-title" className="hm-h1">
+                <span className="hm-role" {...enter(0)}>
+                  {site.role}
+                </span>{" "}
+                <span className="hm-name">
+                  <Words text={site.name} />
+                </span>
               </h1>
               <p className="hm-philosophy" {...enter(3)}>
                 {site.philosophy}

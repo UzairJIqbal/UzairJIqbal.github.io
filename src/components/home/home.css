@@ -129,13 +129,21 @@
   z-index: 1;
   min-width: 0;
 }
+.hm-h1 {
+  margin: 0;
+  font-size: inherit;
+  font-weight: 400;
+}
 .hm-role {
+  display: block;
   margin: 0 0 18px;
   font-family: var(--mono);
   font-size: 13px;
+  line-height: 1.5;
   color: var(--c-accent);
 }
 .hm-name {
+  display: block;
   margin: 0;
   font-family: var(--serif);
   font-size: clamp(72px, 19vw, 152px);
